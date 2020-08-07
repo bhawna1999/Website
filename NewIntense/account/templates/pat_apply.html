@@ -38,6 +38,11 @@
           </nav>
     </div>
 </section>
+<div class=" search-job text-white text-center">
+  {% for m in messages %}
+   <h1 > {{m}}</h1>
+  {% endfor %}
+</div>
 <div class="Job_container">
 {% for appl  in applicant %}
 <div class="card  text-center Job_item">
