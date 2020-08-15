@@ -30,7 +30,7 @@ class candidateRegForm(UserCreationForm):
     gender = forms.ChoiceField(choices=GND_CHOICES, widget=forms.RadioSelect())
     father_name = forms.CharField(required =True,validators=[RegexValidator(r'[a-zA-Z]+', 'Only  characters.')])
     education = forms.CharField(required =True,validators=[RegexValidator(r'[a-zA-Z]+', 'Only  characters.')])
-    PAN_number = forms.CharField(required =False,validators=[RegexValidator(regex='^.{10}$', message='Length has to be 10', code='nomatch')])
+    PAN_number = forms.CharField(required =False)
     Aadhar_number=forms.CharField(required =False,validators=[numeric,RegexValidator(regex='^.{12}$', message='Length has to be 12', code='nomatch')])
     location = forms.CharField(required = True,validators=[RegexValidator(r'[a-zA-Z]+', 'Only  characters.')])
     last_salary = forms.CharField(required =False,validators=[numeric])
@@ -41,6 +41,15 @@ class candidateRegForm(UserCreationForm):
         model = User
     
     @transaction.atomic
+    def clean(self):
+        PAN_number=self.cleaned_data.get("PAN_number")
+        if (PAN_number.isalpha())or (PAN_number.isdigit()) :
+            raise forms.ValidationError("Enter correct PAN Number ")
+        if len(PAN_number)<10:
+            raise forms.ValidationError("PAN Number should 10 contain digits")
+        if len(PAN_number) > 10:
+            raise forms.ValidationError("PAN Number should 10 contain digits")
+
     def save(self):
         user = super().save(commit=False)
         user.is_candidate = True
